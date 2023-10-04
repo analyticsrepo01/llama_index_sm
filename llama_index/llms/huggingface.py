@@ -4,12 +4,8 @@ from typing import Any, List, Optional, Union
 
 from llama_index.bridge.pydantic import Field, PrivateAttr
 from llama_index.callbacks import CallbackManager
-from llama_index.llms.base import (
-    CompletionResponse,
-    CompletionResponseGen,
-    LLMMetadata,
-    llm_completion_callback,
-)
+from llama_index.llms.base import (CompletionResponse, CompletionResponseGen,
+                                   LLMMetadata, llm_completion_callback)
 from llama_index.llms.custom import CustomLLM
 from llama_index.prompts.base import PromptTemplate
 
@@ -100,12 +96,8 @@ class HuggingFaceLLM(CustomLLM):
         """Initialize params."""
         try:
             import torch
-            from transformers import (
-                AutoModelForCausalLM,
-                AutoTokenizer,
-                StoppingCriteria,
-                StoppingCriteriaList,
-            )
+            from transformers import (AutoModelForCausalLM, AutoTokenizer,
+                                      StoppingCriteria, StoppingCriteriaList)
         except ImportError as exc:
             raise ImportError(
                 f"{type(self).__name__} requires torch and transformers packages.\n"
@@ -205,7 +197,7 @@ class HuggingFaceLLM(CustomLLM):
                 inputs.pop(key, None)
 
         tokens = self._model.generate(
-            **inputs,
+            input_ids=inputs['input_ids'], attention_mask=inputs['attention_mask'], # **inputs,
             max_new_tokens=self.max_new_tokens,
             stopping_criteria=self._stopping_criteria,
             **self.generate_kwargs,
